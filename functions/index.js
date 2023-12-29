@@ -7,8 +7,19 @@ exports.helloWorld = onRequest((request, response) => {
 });
 
 exports.create = onCall((request) => {
-    // Placeholder to always return true
+    // Placeholder to return static values
     return {
-        success: true,
+        groups: [
+            {
+                color: 'orange',
+                hex: '#FF9600',
+                properties: [
+                    {
+                        name: 'Santa\'s Workshop',
+                        rent: 450,
+                    },
+                ],
+            },
+        ],
     };
 });
