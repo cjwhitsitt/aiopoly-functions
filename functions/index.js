@@ -1,147 +1,59 @@
 const {onRequest, onCall} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
+const {VertexAI} = require('@google-cloud/vertexai');
 
 exports.helloWorld = onRequest((request, response) => {
   logger.info("Hello logs!", {structuredData: true});
   response.send("Hello from Firebase!");
 });
 
-exports.create = onCall((request) => {
-    // Placeholder to return static values
-    return {
-     "groups": [
-       {
-         "color": "brown",
-         "hex": "#964B00",
-         "properties": [
-           {
-             "name": "Santa's Workshop",
-             "rent": 450
-           },
-           {
-             "name": "North Pole Playground",
-             "rent": 550
-           }
-         ]
-       },
-       {
-         "color": "railroad",
-         "hex": "#646464",  // Gray for railroads
-         "properties": [
-           {
-             "name": "Polar Express",
-             "rent": 250
-           },
-           {
-             "name": "Candy Cane Express",
-             "rent": 250
-           }
-         ]
-       },
-       {
-         "color": "purple",
-         "hex": "#963296",
-         "properties": [
-           {
-             "name": "Gingerbread Village",
-             "rent": 300
-           },
-           {
-             "name": "Reindeer Games Arena",
-             "rent": 350
-           },
-           {
-             "name": "Caroling Competition Stage",
-             "rent": 400
-           }
-         ]
-       },
-       {
-         "color": "blue",
-         "hex": "#0064C8",
-         "properties": [
-           {
-             "name": "Frozen Lake",
-             "rent": 280
-           },
-           {
-             "name": "Sledding Hill",
-             "rent": 330
-           },
-           {
-             "name": "Snow Globe Factory",
-             "rent": 380
-           }
-         ]
-       },
-       {
-         "color": "green",
-         "hex": "#009600",
-         "properties": [
-           {
-             "name": "Christmas Tree Farm",
-             "rent": 260
-           },
-           {
-             "name": "Elf Toy Shop",
-             "rent": 310
-           },
-           {
-             "name": "Christmas Cookie Bakery",
-             "rent": 360
-           }
-         ]
-       },
-       {
-         "color": "orange",
-         "hex": "#FF9600",
-         "properties": [
-           {
-             "name": "Department Store Wonderland",
-             "rent": 400
-           },
-           {
-             "name": "Cozy Toy Shop",
-             "rent": 450
-           },
-           {
-             "name": "Santa's Sleighport",
-             "rent": 500
-           }
-         ]
-       },
-       {
-         "color": "yellow",
-         "hex": "#FFFF00",
-         "properties": [
-           {
-             "name": "Mrs. Claus' Kitchen",
-             "rent": 350
-           },
-           {
-             "name": "The Naughty and Nice List",
-             "rent": 400
-           },
-           {
-             "name": "North Pole Post Office",
-             "rent": 450
-           }
-         ]
-       },
-       {
-         "color": "utility",
-         "hex": "#646464",  // Gray for utilities
-         "properties": [
-           {
-             "name": "Snowy Owl Post",
-             "rent": 150
-           },
-           {
-             "name": "Abominable Snowman Tour",
-             "rent": 150
-           }
-         ]
-       }
-     ]
-    };
+// Enable Vertex AI in Cloud Console: https://cloud.google.com/vertex-ai/docs/start/client-libraries
+// When using Firebase Functions, your instance won't require an extra service account to access Google's AI APIs.
+// Test your prompts in the Cloud Console from the Vertex AI Studio: https://console.cloud.google.com/vertex-ai/generative?project=aiopoly
+// After testing, get the code for different client SDKs from within the Vertex AI Studio.
+exports.create = onCall(async (request) => {
+  const theme = request.data.theme;
+
+  // Initialize Vertex with your Cloud project and location
+  const vertex_ai = new VertexAI({project: 'aiopoly', location: 'us-central1'});
+  const model = 'gemini-pro';
+
+  // Instantiate the models
+  const generativeModel = vertex_ai.preview.getGenerativeModel({
+    model: model,
+    // Test different parameters in the Vertex AI Studio: https://console.cloud.google.com/vertex-ai/generative?project=aiopoly
+    generation_config: {
+      "max_output_tokens": 2048,
+      "temperature": 0.9,
+      "top_p": 1
+  },
+  });
+
+  // Be sure to include the dynamic parameters in your prompt.
+  const prompt = `Provide Monopoly board spaces for a game themed around ${theme} in json matching the following format without markdown annotation:
+{
+  "groups": [
+    {
+      "color": "dark blue",
+      "hex": "#295DAB
+      "properties": [
+        {
+          "name": "Boardwalk",
+          "rent": 450
+        }
+      ]
+    }
+  ]
+}
+`;
+
+  const req = {
+    contents: [{role: 'user', parts: [{text: prompt}]}],
+  };
+
+  const content = await generativeModel.generateContent(req);
+  const string = content.response.candidates.at(0).content.parts.at(0).text;
+  const obj = JSON.parse(string);
+  console.log(obj);
+  return obj;
 });
