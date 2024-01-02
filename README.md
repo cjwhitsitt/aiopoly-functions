@@ -1,8 +1,8 @@
-# AIopoly
+# AIopoly - Functions
 
 This project demonstrates how to leverage Vertex AI's text generation capabilities to create unique Monopoly properties based on user-provided themes. 
 
-This Firebase Functions project is meant to work with any frontend via its callable function `/create`. A Flutter sample app that uses this is available at ...
+This Firebase Functions project is meant to work with any frontend via its callable function `/create`. A Flutter sample app that uses this is available at https://github.com/cjwhitsitt/aiopoly-flutter.
 
 ## Key Features:
 
