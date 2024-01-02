@@ -16,6 +16,7 @@ exports.create = onCall(async (request) => {
 
   // Initialize Vertex with your Cloud project and location
   const vertex_ai = new VertexAI({project: 'aiopoly', location: 'us-central1'});
+  // Available models: https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models
   const model = 'gemini-pro';
 
   // Instantiate the models
