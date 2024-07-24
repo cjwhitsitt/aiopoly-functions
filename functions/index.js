@@ -32,7 +32,7 @@ exports.create = onCall(async (request) => {
 
   // Be sure to include the dynamic parameters in your prompt.
   // Note: An earlier version of this didn't have a comma at the end of the "hex" line. The response occasionally didn't have one either.
-  const prompt = `Provide Monopoly board spaces for a game themed around ${theme} in json matching the following format without markdown annotation:
+  const prompt = `Provide Monopoly board spaces for a game themed around ${theme} in json matching the following format without markdown annotation or any other root objects:
 {
   "groups": [
     {
