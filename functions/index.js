@@ -17,7 +17,7 @@ exports.create = onCall(async (request) => {
   // Initialize Vertex with your Cloud project and location
   const vertex_ai = new VertexAI({project: 'aiopoly', location: 'us-central1'});
   // Available models: https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models
-  const model = 'gemini-pro';
+  const model = 'gemini-1.5-flash';
 
   // Instantiate the models
   const generativeModel = vertex_ai.preview.getGenerativeModel({
@@ -27,7 +27,7 @@ exports.create = onCall(async (request) => {
       "max_output_tokens": 2048,
       "temperature": 0.9,
       "top_p": 1
-  },
+    },
   });
 
   // Be sure to include the dynamic parameters in your prompt.
