@@ -23,31 +23,31 @@ exports.create = onCall(async (request) => {
   const model = 'gemini-1.5-flash';
 
   // Define the schema for the response
-  // const jsonSchema = {
-  //   type: 'object',
-  //   properties: {
-  //     groups: {
-  //       type: 'array',
-  //       items: {
-  //         type: 'object',
-  //         properties: {
-  //           color: { type: 'string' },
-  //           hex: { type: 'string' },
-  //           properties: {
-  //             type: 'array',
-  //             items: {
-  //               type: 'object',
-  //               properties: {
-  //                 name: { type: 'string' },
-  //                 rent: { type: 'number' },
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // };
+  const jsonSchema = {
+    type: 'object',
+    properties: {
+      groups: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            color: { type: 'string' },
+            hex: { type: 'string' },
+            properties: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  rent: { type: 'number' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
 
   // Instantiate the models
   const generativeModel = vertex_ai.preview.getGenerativeModel({
@@ -57,31 +57,31 @@ exports.create = onCall(async (request) => {
       "max_output_tokens": 2048,
       "temperature": 0.9,
       "top_p": 1,
-      // responseMimeType: "application/json",
-      // responseSchema: jsonSchema,
+      responseMimeType: "application/json",
+      responseSchema: jsonSchema,
     },
   });
 
   // Be sure to include the dynamic parameters in your prompt.
   // Note: An earlier version of this didn't have a comma at the end of the "hex" line. The response occasionally didn't have one either.
-  const prompt = `Provide Monopoly board spaces for a game themed around ${theme} in json matching the following format without markdown annotation or any other root objects:
-{
-  "groups": [
-    {
-      "color": "dark blue",
-      "hex": "#295DAB",
-      "properties": [
-        {
-          "name": "Boardwalk",
-          "rent": 450
-        }
-      ]
-    }
-  ]
-}
-`;
+//   const prompt = `Provide Monopoly board spaces for a game themed around ${theme} in json matching the following format without markdown annotation or any other root objects:
+// {
+//   "groups": [
+//     {
+//       "color": "dark blue",
+//       "hex": "#295DAB",
+//       "properties": [
+//         {
+//           "name": "Boardwalk",
+//           "rent": 450
+//         }
+//       ]
+//     }
+//   ]
+// }
+// `;
 
-  // const prompt = `Provide Monopoly board spaces for a game themed around ${theme}. Don't include non-purchasable spaces like Go or Community Chest. The hex property should be in hexidecimal.`;
+  const prompt = `Provide Monopoly board spaces for a game themed around ${theme}. Don't include non-purchasable spaces like Go or Community Chest. The hex property should be in hexidecimal.`;
 
   const req = {
     contents: [{role: 'user', parts: [{text: prompt}]}],
