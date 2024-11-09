@@ -4,6 +4,8 @@ This project demonstrates how to leverage Vertex AI's text generation capabiliti
 
 This Firebase Functions project is meant to work with any frontend via its callable function `/create`. A Flutter sample app that uses this is available at https://github.com/cjwhitsitt/aiopoly-flutter.
 
+For a walk-through on building this project from scratch, see my [Medium article](https://medium.com/firebase-developers/unlock-the-power-of-generative-ai-in-your-applications-with-gemini-3117a64fbd5e).
+
 ## Key Features:
 
 - **Creative Content Generation:** Utilizes Vertex AI's Gemini Pro model to generate original Monopoly property names and descriptions tailored to specific themes. 
